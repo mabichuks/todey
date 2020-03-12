@@ -22,7 +22,9 @@ class MyApp extends StatelessWidget {
                   body1: TextStyle(color: Color(0xff212121)),
                   body2: TextStyle(color: Color(0xff212121)),
                 ),
-            iconTheme: IconThemeData(color: Color(0xffFFFFFF))),
+            iconTheme: IconThemeData(color: Color(0xffFFFFFF))
+        ),
+
         home: LoginScreen());
   }
 }
