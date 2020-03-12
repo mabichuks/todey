@@ -9,10 +9,15 @@ import 'package:todoey/screens/login.dart';
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   runApp(
-    BlocProvider<AuthBloc>(
-      create: (context) => AuthBloc(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (_) => AuthBloc(),
+        )
+      ],
       child: MyApp(),
-    )
+    ),
+
   );
 }
 
@@ -30,9 +35,10 @@ class MyApp extends StatelessWidget {
               canvasColor: Color.fromRGBO(255, 254, 229, 1),
               textTheme: ThemeData.light().textTheme.copyWith(
                     title: TextStyle(
-                        color: Color(0xff212121),
+                        color: Color(0xffFFFFFF),
                         fontFamily: 'RobotoCondensed',
-                        fontWeight: FontWeight.bold),
+                        fontSize: 50,
+                        fontWeight: FontWeight.w700),
                     body1: TextStyle(color: Color(0xff212121)),
                     body2: TextStyle(color: Color(0xff212121)),
                   ),
