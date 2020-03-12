@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:todoey/bloc/auth/bloc.dart';
+import 'package:todoey/models/login.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -8,47 +12,60 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _key = GlobalKey<FormState>();
   final focusPassword = FocusNode();
-
+  ProgressDialog pr;
   Map<String, String> _formData = {'email': null, 'password': null};
 
   @override
   Widget build(BuildContext context) {
+    _initProgressDialog(context);
     return Form(
         key: _key,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            children: <Widget>[
-              _buildEmailField(validator: (val) => _emailValidator(val)),
-              SizedBox(
-                height: 20,
-              ),
-              _buildPasswordField(validator: (val) => _passwordValidator(val)),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthProcessingState) {
+                pr.show();
+              }
+
+              if(state is IsAuthenticatedState) pr.hide();
+            },
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (ctx, state) => Column(
                 children: <Widget>[
-                  FlatButton(
-                    child: Text(
-                      'Register',
-                      style: TextStyle(color: Color(0xffBDBDBD)),
-                    ),
-                    onPressed: () {},
+                  _buildEmailField(validator: (val) => _emailValidator(val)),
+                  SizedBox(
+                    height: 20,
                   ),
-                  FlatButton(
-                    child: Text('Forgot Password?',
-                        style: TextStyle(color: Color(0xffBDBDBD))),
-                    onPressed: () {},
-                  )
+                  _buildPasswordField(
+                      validator: (val) => _passwordValidator(val)),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FlatButton(
+                        child: Text(
+                          'Register',
+                          style: TextStyle(color: Color(0xffBDBDBD)),
+                        ),
+                        onPressed: () {},
+                      ),
+                      FlatButton(
+                        child: Text('Forgot Password?',
+                            style: TextStyle(color: Color(0xffBDBDBD))),
+                        onPressed: () {},
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _buildLoginButton(context),
                 ],
               ),
-              SizedBox(
-                height: 20,
-              ),
-              _buildLoginButton()
-            ],
+            ),
           ),
         ));
   }
@@ -94,18 +111,17 @@ class _LoginFormState extends State<LoginForm> {
     return val.length < 6 ? "password cannot  be less than 6 characters" : null;
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildLoginButton(BuildContext ctx) {
     final button = Material(
       elevation: 3.0,
       borderRadius: BorderRadius.circular(32.0),
       color: Color(0xff01A0C7),
       child: MaterialButton(
         onPressed: () => _loginCallback(),
-        minWidth: MediaQuery.of(context).size.width,
+        minWidth: MediaQuery.of(ctx).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         child: Text("Login",
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.body1),
+            textAlign: TextAlign.center, style: Theme.of(ctx).textTheme.body1),
       ),
     );
 
@@ -114,11 +130,25 @@ class _LoginFormState extends State<LoginForm> {
 
   void _loginCallback() {
     if (_key.currentState.validate()) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text('Processing Data')));
-
       _key.currentState.save();
+      LoginModel model = LoginModel(
+          email: _formData['email'], password: _formData['password']);
+      BlocProvider.of<AuthBloc>(context).add(LoginEvent(model));
       print(_formData);
     }
+  }
+
+  void _initProgressDialog(BuildContext ctx) {
+    pr = ProgressDialog(
+      ctx,
+      type: ProgressDialogType.Normal,
+
+    );
+
+    pr.style(
+      message: 'Signing in',
+      borderRadius: 10.0,
+      insetAnimCurve: Curves.easeInOut
+    );
   }
 }

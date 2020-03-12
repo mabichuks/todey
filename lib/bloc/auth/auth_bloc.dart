@@ -26,7 +26,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<UserModel> _doLogin(LoginModel model) {
     return Future.delayed(Duration(seconds: 5), () => UserModel(
       id: '12345abc',
-      email: 'mail@mail.com'
+      email: model.email
     ));
   }
+
 }
