@@ -1,38 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:todoey/models/todo.dart';
+import 'package:todoey/services/todo/todo_service.dart';
+import 'package:todoey/widgets/add_todo_form.dart';
 import 'package:todoey/widgets/todo_list.dart';
 
 class HomeScreen extends StatelessWidget {
 
-  final List<TodoModel> todos = [
-    TodoModel(
-        dateCreated: '01/01/2020',
-        userId: '1223',
-        id: '1',
-        name: 'Buy Groceries',
-        priority: Priority.High,
-        status: Status.Pending),
-    TodoModel(
-        dateCreated: '01/01/2020',
-        userId: '1223',
-        id: '1',
-        name: 'Buy Clothes',
-        priority: Priority.Low,
-        status: Status.Done),
-    TodoModel(
-        dateCreated: '01/01/2020',
-        userId: '1223',
-        id: '1',
-        name: 'Do Assignment',
-        priority: Priority.High,
-        status: Status.Pending)
-  ];
+   final TodoService _todoService = TodoService();
+
+
+   void _showAddTodoDialog(BuildContext context){
+     showGeneralDialog(
+         barrierColor: Colors.black.withOpacity(0.5),
+         transitionBuilder: (context, a1, a2, widget) {
+           return Transform.scale(
+             scale: a1.value,
+             child: Opacity(
+               opacity: a1.value,
+               child: AlertDialog(
+                 shape: OutlineInputBorder(
+                     borderRadius: BorderRadius.circular(20.0)
+                 ),
+                 title: Text('Add Todo', style: Theme.of(context).textTheme.title.copyWith(
+                   fontWeight: FontWeight.bold,
+                   color: Color(0xff212121),
+                   fontSize: 20),
+                 ),
+                 content: AddTodoForm(),
+               ),
+             ),
+           );
+         },
+         transitionDuration: Duration(milliseconds: 250),
+         barrierDismissible: true,
+         barrierLabel: '',
+         context: context,
+         pageBuilder: (context, animation1, animation2) => null
+         );
+   }
 
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        elevation: 5.0,
+        onPressed:  () =>  _showAddTodoDialog(context)
+      ),
       body: SafeArea(
         child: Container(
           color: Theme.of(context).primaryColor,
@@ -74,7 +89,7 @@ class HomeScreen extends StatelessWidget {
                       topLeft: Radius.circular(20.0)
                     )
                   ),
-                  child: TodoList(todos),
+                  child: TodoList(_todoService.todos),
                 ),
               ),
             ],

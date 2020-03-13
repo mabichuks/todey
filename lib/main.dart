@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoey/bloc/auth/auth_bloc.dart';
 import 'package:todoey/bloc/auth/auth_state.dart';
+import 'package:todoey/bloc/todo/bloc.dart';
 import 'package:todoey/screens/home.dart';
 import 'package:todoey/screens/login.dart';
 
@@ -13,6 +14,9 @@ void main() {
       providers: [
         BlocProvider<AuthBloc>(
           create: (_) => AuthBloc(),
+        ),
+        BlocProvider<TodoBloc>(
+          create: (_) => TodoBloc(),
         )
       ],
       child: MyApp(),
