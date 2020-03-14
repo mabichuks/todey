@@ -21,6 +21,9 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^3.2.0
   progress_dialog: ^1.2.1
+  flutter_spinkit: "^4.0.0"
+  google_nav_bar: ^2.0.1
+  line_icons: ^0.2.0
 
 
   # The following adds the Cupertino Icons font to your application.

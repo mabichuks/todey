@@ -55,7 +55,6 @@ class MyApp extends StatelessWidget {
                 return LoginScreen();
               }
               if(state is IsAuthenticatedState) {
-                print("==============> HOME SCREEN");
                 return HomeScreen();
               } else
               return LoginScreen();

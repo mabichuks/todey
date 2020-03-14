@@ -147,6 +147,7 @@ class _LoginFormState extends State<LoginForm> {
 
     pr.style(
       message: 'Signing in',
+      messageTextStyle: Theme.of(context).textTheme.body1,
       borderRadius: 10.0,
       insetAnimCurve: Curves.easeInOut
     );
