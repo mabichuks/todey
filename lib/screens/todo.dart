@@ -12,7 +12,7 @@ class TodoScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           elevation: 5.0,
-          onPressed:  () =>  _showAddTodoDialog(context)
+          onPressed:  () =>  _onButtonPressed(context),
       ),
       body: SafeArea(
           child: Column(
@@ -91,6 +91,45 @@ class TodoScreen extends StatelessWidget {
         barrierLabel: '',
         context: context,
         pageBuilder: (context, animation1, animation2) => null
+    );
+  }
+
+
+  void _onButtonPressed(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(topRight: Radius.circular(12), topLeft: Radius.circular(12)),
+        ),
+        builder: (ctx) => Container(
+          height: 180,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Container(
+                    width: 60,
+                    height: 5,
+                    alignment: Alignment(0.5, 1.0),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(192, 192, 192, 0.7),
+                      borderRadius: BorderRadius.all(Radius.circular(10)
+                    ),
+                  ),
+                ),
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10)
+              ),
+            ),
+
+          ),
+
     );
   }
 

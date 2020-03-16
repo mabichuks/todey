@@ -3,11 +3,6 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:todoey/screens/account.dart';
 import 'package:todoey/screens/todo.dart';
-import 'package:todoey/services/todo/todo_service.dart';
-import 'package:todoey/widgets/add_todo_form.dart';
-import 'package:todoey/widgets/todo_list.dart';
-
-import '../widgets/todo_list.dart';
 import 'history.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -39,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
               activeColor: Colors.white,
               iconSize: 24,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              duration: Duration(milliseconds: 800),
+              duration: Duration(milliseconds: 500),
               tabBackgroundColor: Theme.of(context).primaryColor,
               tabs: [
                 GButton(
