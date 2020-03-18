@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todoey/utils/utils.dart';
 import 'package:todoey/widgets/add_todo_form.dart';
+import 'package:todoey/widgets/bottom_modal.dart';
 import 'package:todoey/widgets/todo_list.dart';
 
 class TodoScreen extends StatelessWidget {
@@ -98,38 +100,11 @@ class TodoScreen extends StatelessWidget {
   void _onButtonPressed(BuildContext context) {
     showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(topRight: Radius.circular(12), topLeft: Radius.circular(12)),
+          borderRadius: BorderRadius.only(topRight:  Radius.circular(10), topLeft: Radius.circular(10)),
         ),
-        builder: (ctx) => Container(
-          height: 180,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Container(
-                    width: 60,
-                    height: 5,
-                    alignment: Alignment(0.5, 1.0),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(192, 192, 192, 0.7),
-                      borderRadius: BorderRadius.all(Radius.circular(10)
-                    ),
-                  ),
-                ),
-                ),
-              ],
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10)
-              ),
-            ),
-
-          ),
-
+        builder: (ctx) => CustomBottomModal(AddTodoForm())
     );
   }
 
