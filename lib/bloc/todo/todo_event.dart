@@ -12,6 +12,12 @@ class SaveTodo extends TodoEvent {
   SaveTodo(this.model);
 }
 
+class AddTodo extends TodoEvent {
+
+  final TodoModel model;
+  AddTodo(this.model);
+}
+
 class DeleteTodo extends TodoEvent {
   final String todoId;
 

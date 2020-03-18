@@ -5,11 +5,7 @@ import 'package:todoey/models/todo.dart';
 import 'package:todoey/widgets/loading.dart';
 
 import '../bloc/todo/bloc.dart';
-import '../bloc/todo/bloc.dart';
-import '../bloc/todo/bloc.dart';
-import '../bloc/todo/bloc.dart';
-import '../bloc/todo/bloc.dart';
-import '../bloc/todo/bloc.dart';
+
 
 class TodoList extends StatelessWidget {
 
@@ -19,6 +15,8 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    List<TodoModel> todos = [];
 
     BlocProvider.of<TodoBloc>(context).add(GetTodoList());
 
@@ -30,7 +28,7 @@ class TodoList extends StatelessWidget {
         if(state is TodoLoadedState) {
           return _buildTodoList(context, state.todoList);
         }
-        else return Text('Unable to load todos');
+        else return Center(child: Text('Unable to load todos'));
       }
     );
 

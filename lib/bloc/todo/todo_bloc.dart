@@ -16,10 +16,12 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     if(event is GetTodoList) {
       yield* _mapGetTodoListEventToState(event);
     }
+    if (event is AddTodo){
+      yield* _mapAddTodoEventToState(event);
+    }
   }
 
   Stream<TodoState> _mapGetTodoListEventToState(TodoEvent event) async* {
-
     yield TodoLoadingState();
     final List<TodoModel> todos = await _todoService.getTodos();
     yield TodoLoadedState(todos);
@@ -27,7 +29,16 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   }
 
   Stream<TodoState> _mapAddTodoEventToState(TodoEvent event) async* {
-    // TODO: Add logic
+
+    yield TodoInitialState();
+
+    if(event is AddTodo) {
+      yield TodoSavingState();
+      await _todoService.addTodo(event.model);
+      yield TodoSavedState();
+      await Future.delayed(Duration(milliseconds: 1000));
+      yield TodoInitialState();
+    }
   }
 
   Stream<TodoState> _mapDeleteTodoEventToState(TodoEvent event) async* {

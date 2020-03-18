@@ -27,12 +27,13 @@ class TodoService {
   ];
 
 
-    void addTodo(TodoModel model) {
-      todos.add(model);
+    Future addTodo(TodoModel model) {
+      return Future.delayed(Duration(seconds: 2), ()=> todos.add(model));
     }
 
     Future<List<TodoModel>> getTodos() {
       return Future.delayed(Duration(seconds: 2), ()=> todos);
+
     }
 
 

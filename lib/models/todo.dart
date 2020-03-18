@@ -11,6 +11,12 @@ class TodoModel {
 
   TodoModel({this.id, @required this.name, @required this.priority, @required this.status, @required this.dateCreated, @required this.userId});
 
+  @override
+  String toString() {
+
+    return 'Todo Model $id $name $priority $status $dateCreated $userId';
+  }
+
 
 }
 
