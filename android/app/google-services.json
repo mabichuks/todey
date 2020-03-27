@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "215281542460",
+    "firebase_url": "https://ninja-brew-crew-efd7c.firebaseio.com",
+    "project_id": "ninja-brew-crew-efd7c",
+    "storage_bucket": "ninja-brew-crew-efd7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215281542460:android:9b26e7824b311bb78bea39",
+        "android_client_info": {
+          "package_name": "com.techmonger.brew_crew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215281542460-fvbih46s85er0cstu717lk2l9bdsim25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIFDuU8JeXhljFGsQEMprx5noAd2BM8J0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215281542460-fvbih46s85er0cstu717lk2l9bdsim25.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215281542460:android:e9cfe9cc3c3c27ae8bea39",
+        "android_client_info": {
+          "package_name": "com.techmonger.todoey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215281542460-fvbih46s85er0cstu717lk2l9bdsim25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIFDuU8JeXhljFGsQEMprx5noAd2BM8J0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215281542460-fvbih46s85er0cstu717lk2l9bdsim25.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

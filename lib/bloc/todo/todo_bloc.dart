@@ -33,6 +33,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     yield TodoInitialState();
 
     if(event is AddTodo) {
+      //TODO Implement after adding, get new list
       yield TodoSavingState();
       await _todoService.addTodo(event.model);
       yield TodoSavedState();

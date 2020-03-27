@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todoey/utils/utils.dart';
 import 'package:todoey/widgets/add_todo_form.dart';
 import 'package:todoey/widgets/bottom_modal.dart';
 import 'package:todoey/widgets/todo_list.dart';
