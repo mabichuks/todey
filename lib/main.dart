@@ -6,6 +6,9 @@ import 'package:todoey/bloc/auth/auth_state.dart';
 import 'package:todoey/bloc/todo/bloc.dart';
 import 'package:todoey/screens/home.dart';
 import 'package:todoey/screens/login.dart';
+import 'package:todoey/screens/register.dart';
+
+import 'bloc/register/bloc.dart';
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
@@ -17,6 +20,9 @@ void main() {
         ),
         BlocProvider<TodoBloc>(
           create: (_) => TodoBloc(),
+        ),
+        BlocProvider<RegisterBloc>(
+          create: (_) => RegisterBloc(),
         )
       ],
       child: MyApp(),
@@ -60,7 +66,11 @@ class MyApp extends StatelessWidget {
               return LoginScreen();
             }
 
-          )
+          ),
+
+      routes: {
+            RegisterScreen.ROUTE: (ctxt) => RegisterScreen()
+      },
       );
 
   }

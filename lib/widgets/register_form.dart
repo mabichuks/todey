@@ -1,20 +1,26 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:todoey/bloc/auth/bloc.dart';
+import 'package:todoey/bloc/register/bloc.dart';
 import 'package:todoey/models/login.dart';
-import 'package:todoey/screens/register.dart';
 
-class LoginForm extends StatefulWidget {
+class RegisterForm extends StatefulWidget{
+
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _RegisterFormState createState() => _RegisterFormState();
+
+
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegisterFormState extends State<RegisterForm> {
+
+
   final _key = GlobalKey<FormState>();
   final focusPassword = FocusNode();
+  final focusConfirmPassword = FocusNode();
   ProgressDialog pr;
-  Map<String, String> _formData = {'email': null, 'password': null};
+  Map<String, String> _formData = {'email': null, 'password': null, 'confirmPassword': null};
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +29,21 @@ class _LoginFormState extends State<LoginForm> {
         key: _key,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
-          child: BlocListener<AuthBloc, AuthState>(
+          child: BlocListener<RegisterBloc, RegisterState>(
             listener: (context, state) {
-              if (state is AuthProcessingState) {
+              if (state is RegisterProcessingState) {
                 pr.show();
               }
 
-              if(state is IsAuthenticatedState) pr.hide();
+              if(state is RegisterCompletedState) {
+                pr.hide();
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text('Successfully registered'))
+                );
+
+              }
             },
-            child: BlocBuilder<AuthBloc, AuthState>(
+            child: BlocBuilder<RegisterBloc, RegisterState>(
               builder: (ctx, state) => Column(
                 children: <Widget>[
                   _buildEmailField(validator: (val) => _emailValidator(val)),
@@ -43,29 +55,11 @@ class _LoginFormState extends State<LoginForm> {
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      FlatButton(
-                        child: Text(
-                          'Register',
-                          style: TextStyle(color: Color(0xffBDBDBD)),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(RegisterScreen.ROUTE);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text('Forgot Password?',
-                            style: TextStyle(color: Color(0xffBDBDBD))),
-                        onPressed: () {},
-                      )
-                    ],
-                  ),
+                  _buildConfirmPasswordField(validator: (val) => _confirmPasswordValidator(val)),
                   SizedBox(
                     height: 20,
                   ),
-                  _buildLoginButton(context),
+                  _buildRegisterButton(context),
                 ],
               ),
             ),
@@ -79,8 +73,10 @@ class _LoginFormState extends State<LoginForm> {
         obscureText: false,
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.next,
-        onFieldSubmitted: (val) =>
-            FocusScope.of(context).requestFocus(focusPassword),
+        onFieldSubmitted: (val) {
+          _formData['email'] = val;
+          //_key.currentState.save();
+          FocusScope.of(context).requestFocus(focusPassword);},
         decoration: InputDecoration(
           hintText: 'Email',
           prefixIcon: Icon(Icons.email),
@@ -96,7 +92,10 @@ class _LoginFormState extends State<LoginForm> {
         obscureText: true,
         keyboardType: TextInputType.text,
         focusNode: focusPassword,
-        onFieldSubmitted: (val) => _loginCallback(),
+        onFieldSubmitted: (val) {
+          _formData['password'] = val;
+          FocusScope.of(context).requestFocus(focusConfirmPassword);
+        },
         decoration: InputDecoration(
           hintText: 'Password',
           prefixIcon: Icon(Icons.vpn_key),
@@ -104,6 +103,22 @@ class _LoginFormState extends State<LoginForm> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
         ),
         onSaved: (val) => _formData['password'] = val);
+  }
+
+  Widget _buildConfirmPasswordField({Function validator}) {
+    return TextFormField(
+        validator: (val) => validator(val),
+        obscureText: true,
+        keyboardType: TextInputType.text,
+        focusNode: focusConfirmPassword,
+        onFieldSubmitted: (val) => _registerCallback(),
+        decoration: InputDecoration(
+          hintText: 'Confirm Password',
+          prefixIcon: Icon(Icons.vpn_key),
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        ),
+        onSaved: (val) => _formData['confirmPassword'] = val);
   }
 
   String _emailValidator(String val) {
@@ -114,16 +129,20 @@ class _LoginFormState extends State<LoginForm> {
     return val.length < 6 ? "password cannot  be less than 6 characters" : null;
   }
 
-  Widget _buildLoginButton(BuildContext ctx) {
+  String _confirmPasswordValidator(String val) {
+    return _formData['password'] != val ? 'Passwords do not match' : null;
+  }
+
+  Widget _buildRegisterButton(BuildContext ctx) {
     final button = Material(
       elevation: 3.0,
       borderRadius: BorderRadius.circular(32.0),
       color: Color(0xff01A0C7),
       child: MaterialButton(
-        onPressed: () => _loginCallback(),
+        onPressed: () => _registerCallback(),
         minWidth: MediaQuery.of(ctx).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        child: Text("Login",
+        child: Text("Register",
             textAlign: TextAlign.center, style: Theme.of(ctx).textTheme.body1),
       ),
     );
@@ -131,12 +150,12 @@ class _LoginFormState extends State<LoginForm> {
     return button;
   }
 
-  void _loginCallback() {
+  void _registerCallback() {
     if (_key.currentState.validate()) {
       _key.currentState.save();
       LoginModel model = LoginModel(
           email: _formData['email'], password: _formData['password']);
-      BlocProvider.of<AuthBloc>(context).add(LoginEvent(model));
+      BlocProvider.of<RegisterBloc>(context).add(RegisterUserEvent(model));
       print(_formData);
     }
   }
@@ -149,10 +168,11 @@ class _LoginFormState extends State<LoginForm> {
     );
 
     pr.style(
-      message: 'Signing in',
-      messageTextStyle: Theme.of(context).textTheme.body1,
-      borderRadius: 10.0,
-      insetAnimCurve: Curves.easeInOut
+        message: 'Signing in',
+        messageTextStyle: Theme.of(context).textTheme.body1,
+        borderRadius: 10.0,
+        insetAnimCurve: Curves.easeInOut
     );
   }
+
 }

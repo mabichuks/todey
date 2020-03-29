@@ -15,36 +15,44 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   final List<String> items = ['Completed', 'Delete'];
 
-  TodoBloc bloc;
+  List<TodoModel> todoItems;
 
   @override
   void initState() {
     super.initState();
-    bloc = BlocProvider.of(context);
+    BlocProvider.of<TodoBloc>(context).add(GetTodoList());
+
   }
 
-  blocListener(){
-    bloc.listen((state){
-
-    },
-
-    );
-  }
   @override
   Widget build(BuildContext context) {
 
-    BlocProvider.of<TodoBloc>(context).add(GetTodoList());
 
-    return BlocBuilder<TodoBloc, TodoState>(builder: (_, state) {
-      if (state is TodoLoadingState) {
-        return LoadingIndicator(
-            Theme.of(context).canvasColor, Theme.of(context).primaryColor);
-      }
-      if (state is TodoLoadedState) {
-        return _buildTodoList(context, state.todoList);
-      } else
-        return Center(child: Text('Unable to load todos'));
-    });
+    return BlocListener<TodoBloc, TodoState>(
+      listener: (ctx, state) {
+
+
+      },
+      child: BlocBuilder<TodoBloc, TodoState>(builder: (_, state) {
+        if (state is TodoLoadingState) {
+          return LoadingIndicator(
+              Theme.of(context).canvasColor, Theme.of(context).primaryColor);
+        }
+        if (state is TodoLoadedState) {
+          todoItems = state.todoList;
+          return _buildTodoList(context, todoItems);
+        }
+        if(state is TodoSavingState){
+          return _buildTodoList(context, todoItems);
+        }
+        if(state is TodoSavedState){
+          return _buildTodoList(context, todoItems);
+        }
+        else
+          return Center(child: Text('Unable to load todos'));
+      })
+    );
+
   }
 
   IconData _getStatusIcon(TodoModel model) {
@@ -72,7 +80,10 @@ class _TodoListState extends State<TodoList> {
   }
 
   Widget _buildTodoList(BuildContext context, List<TodoModel> models) {
-    return ListView.builder(
+
+    return models.isEmpty ?
+        Center(child: Text("There are no todos"),):
+    ListView.builder(
       itemCount: models.length,
       itemBuilder: (ctx, index) => Card(
         key: Key(models[index].id),
@@ -82,7 +93,7 @@ class _TodoListState extends State<TodoList> {
           leading: CircleAvatar(
             child: Icon(Icons.schedule),
           ),
-          trailing:_popOverItem(context),
+          trailing:_popOverItem(context, index),
           title: Text(
             models[index].name,
             style: Theme.of(context)
@@ -96,7 +107,8 @@ class _TodoListState extends State<TodoList> {
     );
   }
 
-  Widget _popOverItem(BuildContext context) {
+  Widget _popOverItem(BuildContext context, int index) {
+
     return PopupMenuButton<String>(
       itemBuilder: (context) => items.map((item) =>
       PopupMenuItem(
@@ -104,7 +116,13 @@ class _TodoListState extends State<TodoList> {
         child: Text(item),
       )
       ).toList(),
-      onSelected: (val) => print(val),
+      onSelected: (val) {
+        if(val == 'Delete') {
+          setState(() {
+            todoItems.removeAt(index);
+          });
+        }
+      }
     );
   }
 }

@@ -37,8 +37,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       yield TodoSavingState();
       await _todoService.addTodo(event.model);
       yield TodoSavedState();
-      await Future.delayed(Duration(milliseconds: 1000));
-      yield TodoInitialState();
+      yield TodoLoadingState();
+      final List<TodoModel> todos = await _todoService.getTodos();
+      yield TodoLoadedState(todos);
     }
   }
 
